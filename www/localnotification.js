@@ -43,11 +43,9 @@
      end of underscore ext
      */
 
-    var exec = require('cordova/exec'),
-        cordova = require('cordova');
+    var exec = require('cordova/exec');
 
-    var LocalNotification = function () {
-    };
+    var LocalNotification = function () {};
                
              
 
@@ -71,23 +69,21 @@
         if (typeof defaults.date == 'object') {
             defaults.date = Math.round(defaults.date.getTime()/1000);
         }
-        cordova.exec(null,null,"LocalNotification","addNotification",[defaults]);
+        exec(null,null,"LocalNotification","addNotification",[defaults]);
     };
 
     LocalNotification.prototype.cancel = function(id) {
-               cordova.exec(null,null,"LocalNotification","cancelNotification",[id]);
-            };
+        exec(null,null,"LocalNotification","cancelNotification",[id]);
+    };
                
-               LocalNotification.prototype.pulsePendingNotification = function() {
-               cordova.exec(null,null,"LocalNotification","pulsePendingNotification",[]);
-               };
+    LocalNotification.prototype.pulsePendingNotification = function() {
+        exec(null,null,"LocalNotification","pulsePendingNotification",[]);
+    };
 
     LocalNotification.prototype.cancelAll = function(id) {
-               cordova.exec(null,null,"LocalNotification","cancelAllNotifications",[id]);
-        
+        exec(null,null,"LocalNotification","cancelAllNotifications",[id]);
     };
 
     var notification = new LocalNotification();
-               
-              
+
     module.exports = notification;
