@@ -52,4 +52,14 @@ To remove all notifications:
         
     window.plugin.localNotification.clearAll();
     
-        
+
+
+in iOS if the notification arrived when your app was closed and the app was launched from the notification itself (cold start) the notification callback would NOT be called even though the notification data is available.
+
+you can work around it by doing the following on your app startup:
+
+    // this will fire the callback handler if we've got a waiting notification
+     function onDeviceReady() {    	
+		window.plugin.localNotification.pulsePendingNotification(); 
+	}
+    
