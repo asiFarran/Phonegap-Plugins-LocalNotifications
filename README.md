@@ -7,13 +7,13 @@
 
     phonegap local plugin add https://github.com/asiFarran/Phonegap-Plugins-LocalNotifications.git
 
-On iOS the plugin uses method swizzling on AppDelegate to hool into the app lifecyle and avoid making manual changes to the main AppDelegate code. This solution has been adopted from the code for the <a target='_blank' href='https://github.com/phonegap-build/PushPlugin'>PushNotification plugin </a>
+On iOS the plugin uses method swizzling on AppDelegate to hook into the app lifecyle and avoid making manual changes to the main AppDelegate code. This solution has been adopted from the code for the <a target='_blank' href='https://github.com/phonegap-build/PushPlugin'>PushNotification plugin </a>
 
 ## Usage:
 
 The plugin creates the object window.plugin.localNotification
 
-	
+    
 To add a notification: 
 	    
     window.plugin.localNotification.add({
@@ -63,3 +63,4 @@ you can work around it by doing the following on your app startup:
 		window.plugin.localNotification.pulsePendingNotification(); 
 	}
     
+The above could also be made to fire automaticaly but then we might run into issues where the callback handler is not yet ready to handle the notification (or does not yet exist), hence the responsibility for the call remains with the application.
