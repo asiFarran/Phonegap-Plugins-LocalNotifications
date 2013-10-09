@@ -1,13 +1,13 @@
 //
-//  AppDelegate+notification.m
-//  localnotification
+//  AppDelegate+localNotification.m
+//
 //
 //  Created by Robert Easterday on 10/26/12.
 //  Modifed by Asi Farran on 23/9/13
 //
 
-#import "AppDelegate+notification.h"
-#import "LocalNotification.h"
+#import "AppDelegate+localNotification.h"
+#import "LocalNotificationPlugin.h"
 #import <objc/runtime.h>
 
 static char launchNotificationKey;
@@ -109,7 +109,7 @@ static char notificationColdStartKey;
 
 // The accessors use an Associative Reference since you can't define a iVar in a category
 // http://developer.apple.com/library/ios/#documentation/cocoa/conceptual/objectivec/Chapters/ocAssociativeReferences.html
-- (UILocalNotificationPlugin  *)launchNotification
+- (LocalNotificationPlugin  *)launchNotification
 {
     return objc_getAssociatedObject(self, &launchNotificationKey);
 }

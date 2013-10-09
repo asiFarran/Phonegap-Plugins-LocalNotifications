@@ -20,8 +20,8 @@
             </feature>
         </config-file>
 
-        <header-file src="src/ios/AppDelegate+notification.h" />
-        <source-file src="src/ios/AppDelegate+notification.m" />
+        <header-file src="src/ios/AppDelegate+localNotification.h" />
+        <source-file src="src/ios/AppDelegate+localNotification.m" />
         <header-file src="src/ios/LocalNotificationPlugin.h" />
         <source-file src="src/ios/LocalNotificationPlugin.m" />
 

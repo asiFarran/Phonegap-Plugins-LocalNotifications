@@ -1,9 +1,9 @@
 //
-//  AppDelegate+notification.h
+//  AppDelegate+localNotification.h
 //  localnotification
 //
 //  Created by Robert Easterday on 10/26/12.
-//
+//  Modifed by Asi Farran on 23/9/13
 //
 
 #import "AppDelegate.h"
