@@ -47,11 +47,18 @@
 
     var LocalNotification = function () {};
                
-             
+    LocalNotification.Recurring = {
+        None: '',
+        Weekly: 'weekly',
+        Monthly: 'monthly',
+        Yearly: 'yearly'
+    };
 
     LocalNotification.prototype.add = function(options) {
+
         var defaults = {
-            date: false,
+            date: '',
+            repeat: '',
             message: '',
             hasAction: true,
             action: 'View',
@@ -62,7 +69,6 @@
             userData: null
         };
 
-    
 
         extend(defaults, options);
 
