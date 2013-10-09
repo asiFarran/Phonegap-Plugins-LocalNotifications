@@ -71,7 +71,7 @@ static char notificationColdStartKey;
     }
 
     if (appState == UIApplicationStateActive) {
-        LocalNotificationPlugin *handler = [self getCommandInstance:@"LocalNotificationPlugin"];
+        LocalNotificationPlugin *handler = [self getCommandInstance:@"LocalNotification"];
         handler.pendingNotification = notification;
 
         [handler notificationReceived];
@@ -89,7 +89,7 @@ static char notificationColdStartKey;
     application.applicationIconBadgeNumber = 0;
 
     if (![self.viewController.webView isLoading] && self.launchNotification) {
-        LocalNotificationPlugin *handler = [self getCommandInstance:@"LocalNotificationPlugin"];
+        LocalNotificationPlugin *handler = [self getCommandInstance:@"LocalNotification"];
 
         handler.pendingNotification = self.launchNotification;
         self.launchNotification = nil;
