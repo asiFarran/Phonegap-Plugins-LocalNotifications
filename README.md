@@ -7,7 +7,7 @@
 
     phonegap local plugin add https://github.com/asiFarran/Phonegap-Plugins-LocalNotifications.git
 
-
+On iOS the plugin uses method swizzling on AppDelegate to hool into the app lifecyle and avoid making manual changes to the main AppDelegate code. This solution has been adopted from the code for the <a target='_blank' href='https://github.com/phonegap-build/PushPlugin'>PushNotification plugin </a>
 
 ## Usage:
 
