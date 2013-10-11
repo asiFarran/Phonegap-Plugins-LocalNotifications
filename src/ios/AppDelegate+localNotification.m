@@ -70,6 +70,13 @@ static char notificationColdStartKey;
         appState = application.applicationState;
     }
 
+    // store the state of the application when the notification was received
+    // in the notification itself
+    NSMutableDictionary *dict = [notification.userInfo mutableCopy];
+    [dict setObject:[NSNumber numberWithBool:(appState == UIApplicationStateActive)] forKey:@"appActiveWhenReceiving"];
+    notification.userInfo = dict;
+    
+    
     if (appState == UIApplicationStateActive) {
         LocalNotificationPlugin *handler = [self getCommandInstance:@"LocalNotification"];
         handler.pendingNotification = notification;

@@ -85,13 +85,12 @@
     
     if (pendingNotification)
     {
-
-        BOOL appInForeground = [[UIApplication sharedApplication] applicationState] == UIApplicationStateActive;
+        BOOL appInForeground =  [[pendingNotification.userInfo objectForKey:@"appActiveWhenReceiving"] boolValue];
         NSDictionary *userData =  [pendingNotification.userInfo objectForKey:@"userData"];
         
         NSMutableDictionary* notification = [[NSMutableDictionary alloc] init];
         
-        [notification setObject:[NSNumber numberWithBool:appInForeground] forKey:@"isInForeground"];
+        [notification setObject:[NSNumber numberWithBool:appInForeground] forKey:@"receivedWhileInForeground"];
         [notification setObject:[pendingNotification.userInfo objectForKey:@"notificationId"] forKey:@"id"];
         [notification setObject:userData forKey:@"data"];
           
