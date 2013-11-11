@@ -49,6 +49,7 @@
                
     LocalNotification.Recurring = {
         None: '',
+        Daily: 'daily',
         Weekly: 'weekly',
         Monthly: 'monthly',
         Yearly: 'yearly'

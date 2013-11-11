@@ -12,7 +12,36 @@
         <clobbers target="plugins.localNotification" />
     </js-module>
 
-    <!-- ios -->
+    <platform name="android">
+
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="LocalNotification">
+                <param name="android-package" value="com.stratogos.cordova.localNotification.LocalNotificationPlugin" />
+            </feature>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.WAKE_LOCK" />
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <activity android:name="com.stratogos.cordova.localNotification.NotificationHandlerActivity"/>
+            <receiver android:name="com.stratogos.cordova.localNotification.AlarmReceiver" ></receiver>
+            <receiver android:name="com.stratogos.cordova.localNotification.AlarmRestoreOnBoot" >
+                <intent-filter>
+                    <action android:name="android.intent.action.BOOT_COMPLETED" />
+                </intent-filter>
+            </receiver>
+        </config-file>
+
+        <source-file src="src/android/AlarmHelper.java" target-dir="src/com/stratogos/cordova/localNotification"/>
+        <source-file src="src/android/AlarmReceiver.java" target-dir="src/com/stratogos/cordova/localNotification"/>
+        <source-file src="src/android/AlarmRestoreOnBoot.java" target-dir="src/com/stratogos/cordova/localNotification"/>
+        <source-file src="src/android/LocalNotificationPlugin.java" target-dir="src/com/stratogos/cordova/localNotification"/>
+        <source-file src="src/android/NotificationHandlerActivity.java" target-dir="src/com/stratogos/cordova/localNotification"/>
+        <source-file src="src/android/libs/android-support-v4.jar" target-dir="libs/" />
+    </platform>
+
     <platform name="ios">
         <config-file target="config.xml" parent="/*">
             <feature name="LocalNotification">
@@ -24,7 +53,6 @@
         <source-file src="src/ios/AppDelegate+localNotification.m" />
         <header-file src="src/ios/LocalNotificationPlugin.h" />
         <source-file src="src/ios/LocalNotificationPlugin.m" />
-
     </platform>
 </plugin>
 	
