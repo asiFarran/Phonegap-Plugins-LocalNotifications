@@ -56,7 +56,7 @@ To remove all notifications:
 
 In iOS if the notification arrived when your app was closed and the app was launched from the notification itself (cold start) the notification callback would NOT be called even though the notification data is available.
 
-you can work around it by doing the following on your app startup:
+You can work around it by doing the following on your app startup:
 
     // this will fire the callback handler if we've got a waiting notification
      function onDeviceReady() {    	
@@ -64,5 +64,5 @@ you can work around it by doing the following on your app startup:
 	}
     
 The above could also be made to fire automaticaly but then we might run into issues where the callback handler is not yet ready to handle the notification (or does not yet exist), hence the responsibility for the call remains with the application.
-
+The same behavior was set for Android to ensure plugin usage and expectations are identical on both platforms
 
