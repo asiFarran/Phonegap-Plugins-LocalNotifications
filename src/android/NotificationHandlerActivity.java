@@ -51,6 +51,11 @@ public class NotificationHandlerActivity extends Activity{
 
             String callback = params.getString("onNotification");
             JSONObject data = params.getJSONObject("userData");
+            
+            boolean appInForeground = LocalNotificationPlugin.isActive() && LocalNotificationPlugin.isInForeground();
+            
+            data.put("receivedWhileInForeground", appInForeground);
+            
             LocalNotificationPlugin.notificationReceived(callback, data);
     }
 

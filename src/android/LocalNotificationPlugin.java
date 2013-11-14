@@ -22,10 +22,14 @@ public class LocalNotificationPlugin extends CordovaPlugin {
 	
 	private static CordovaWebView gWebView;
 	private static String gCachedNotificationCallback = null;	
+	private static boolean gIsInForeground = false;
 	
 	public static final String PLUGIN_NAME = "LocalNotification";
 	public static final String PLUGIN_PREFIX = "LocalNotification_";
 
+	public LocalNotificationPlugin(){
+		gIsInForeground = true;
+	}
 
 	private AlarmHelper alarm = null;
 
@@ -128,7 +132,6 @@ public class LocalNotificationPlugin extends CordovaPlugin {
 		return alarmSettingsEditor.commit();
 	}
 	
-
 	private boolean unpersistAlarm(int id) {
 		
 		
@@ -150,15 +153,32 @@ public class LocalNotificationPlugin extends CordovaPlugin {
 		return alarmSettingsEditor.commit();
 	}
 	
+	@Override
+	public void onPause(boolean multitasking) {
+	        super.onPause(multitasking);
+	        gIsInForeground = false;
+	    }
+
+	@Override
+	public void onResume(boolean multitasking) {
+	        super.onResume(multitasking);
+	        gIsInForeground = true;
+	}
+	    
 	public static boolean isActive()
     {
-            return gWebView != null;
+         return gWebView != null;
+    }
+	
+	public static boolean isInForeground()
+    {
+		return gIsInForeground;
     }
 
 	public static void notificationReceived(String callback, JSONObject data) {
 		
             String notificationCallback = "javascript:" + callback + "(" + data.toString() + ")";
-            Log.v(TAG, "sendJavascript: " + notificationCallback);
+            Log.v(TAG, "sendJavascript: " + notificationCallback + " with JSON: " + data.toString());
 
             if (callback != null) {
             		if(isActive()){
