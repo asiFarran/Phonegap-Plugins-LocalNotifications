@@ -61,6 +61,7 @@
             date: '',
             repeat: '',
             message: '',
+	title:'',			
             hasAction: true,
             action: 'View',
             badge: 0,
