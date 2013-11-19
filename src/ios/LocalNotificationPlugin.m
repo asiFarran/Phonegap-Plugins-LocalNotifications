@@ -26,7 +26,7 @@
     [repeatDict setObject:[NSNumber numberWithInt:0] forKey:@""];
     
     // notif settings
-	double timestamp = [[options objectForKey:@"date"] doubleValue];
+	double timestamp = [[options objectForKey:@"date"] doubleValue] / 1000; // param is in ms but in iOS we need seconds
 	NSString *msg = [options objectForKey:@"message"];
 	NSString *action = [options objectForKey:@"action"];
 	NSString *notificationId = [options objectForKey:@"id"];

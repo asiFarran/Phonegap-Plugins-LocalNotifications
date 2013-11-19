@@ -75,7 +75,7 @@
         extend(defaults, options);
 
         if (typeof defaults.date == 'object') {
-            defaults.date = Math.round(defaults.date.getTime()/1000);
+            defaults.date = Math.round(defaults.date.getTime());
         }
         exec(null,null,"LocalNotification","addNotification",[defaults]);
     };
