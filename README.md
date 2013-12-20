@@ -31,6 +31,7 @@ To add a notification:
        }
     });
 	
+**Please note** that in order to support cold start scenarios the notification callback must be reachable from the global scope!
 
 The notification callback function receives an notification object containg the id and any optional userData provided when the notification was set.
 
@@ -42,7 +43,6 @@ e.g (based on the above)
         notification.customVar2 == 6;
      }
      
-
 
 To remove a notification: 
         
