@@ -16,7 +16,7 @@ The plugin creates the object window.plugin.localNotification
     
 To add a notification: 
 	    
-    window.plugin.localNotification.add({
+    window.plugins.localNotification.add({
        date: new Date(),
        message: 'my message',
        hasAction: true,
@@ -32,7 +32,7 @@ To add a notification:
     });
 	
 
-The notification callback fundtion receives an notification object containg the id and any optional userData provided when the notification was set.
+The notification callback function receives an notification object containg the id and any optional userData provided when the notification was set.
 
 e.g (based on the above)
     
@@ -46,11 +46,11 @@ e.g (based on the above)
 
 To remove a notification: 
         
-    window.plugin.localNotification.clear(id);
+    window.plugins.localNotification.clear(id);
     
 To remove all notifications: 
         
-    window.plugin.localNotification.clearAll();
+    window.plugins.localNotification.clearAll();
     
 
 
@@ -60,7 +60,7 @@ You can work around it by doing the following on your app startup:
 
     // this will fire the callback handler if we've got a waiting notification
      function onDeviceReady() {    	
-		window.plugin.localNotification.pulsePendingNotification(); 
+		window.plugins.localNotification.pulsePendingNotification(); 
 	}
     
 The above could also be made to fire automaticaly but then we might run into issues where the callback handler is not yet ready to handle the notification (or does not yet exist), hence the responsibility for the call remains with the application.
