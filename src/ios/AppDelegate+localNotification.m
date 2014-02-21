@@ -11,26 +11,34 @@
 #import <objc/runtime.h>
 
 
-
-
 @implementation AppDelegate (notification)
 
-static UILocalNotification *launchNotification;
-static BOOL notificationColdStart;
+static UILocalNotification *localNotification;
+static BOOL localNotificationColdStart;
 
 - (id) getCommandInstance:(NSString*)className
 {
 	return [self.viewController getCommandInstance:className];
 }
 
-+ (void)load
-{
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkForNotification:)
-                                                 name:@"UIApplicationDidFinishLaunchingNotification" object:nil];
+-(id) init{
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActiveHandler:)
+                                                name:@"UIApplicationDidBecomeActiveNotification" object:nil];
+    
+    self = [super init];
+    return self;
 }
 
++ (void)load
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkForLocalNotificationsOnStartup:)
+                                                 name:@"UIApplicationDidFinishLaunchingNotification" object:nil];
+    
+    
+}
 
-+ (void)checkForNotification:(NSNotification *)notification
++ (void)checkForLocalNotificationsOnStartup:(NSNotification *)notification
 {
     
 	if (notification)
@@ -38,8 +46,10 @@ static BOOL notificationColdStart;
 		NSDictionary *launchOptions = [notification userInfo];
         
 		if (launchOptions){
-			launchNotification = [launchOptions objectForKey: @"UIApplicationLaunchOptionsLocalNotificationKey"];
-            notificationColdStart = YES;
+			localNotification = [launchOptions objectForKey: @"UIApplicationLaunchOptionsLocalNotificationKey"];
+            if(localNotification){
+                localNotificationColdStart = YES;
+            }
         }
 	}
 }
@@ -68,26 +78,24 @@ static BOOL notificationColdStart;
         [handler notificationReceived];
     } else {
         //save it for later
-        launchNotification = notification;
+        localNotification = notification;
     }
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application {
+- (void)applicationDidBecomeActiveHandler:(NSNotification *)notification {
     
-    NSLog(@"active");
-    
-    //zero badge
-    application.applicationIconBadgeNumber = 0;
+    NSLog(@"local notification active");
     
     
-    if (![self.viewController.webView isLoading] && launchNotification) {
+    
+    if (![self.viewController.webView isLoading] && localNotification) {
         LocalNotificationPlugin *handler = [self getCommandInstance:@"LocalNotification"];
         
-        handler.pendingNotification = launchNotification;
-        launchNotification = nil;
+        handler.pendingNotification = localNotification;
+        localNotification = nil;
         
-        if(notificationColdStart){
-            notificationColdStart = NO; //reset flag so new incoming notifications can be passed directly to the handler
+        if(localNotificationColdStart){
+            localNotificationColdStart = NO; //reset flag so new incoming notifications can be passed directly to the handler
         }
         else{
             [handler performSelectorOnMainThread:@selector(notificationReceived) withObject:handler waitUntilDone:NO];

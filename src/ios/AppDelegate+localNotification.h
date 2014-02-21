@@ -11,7 +11,7 @@
 @interface AppDelegate (notification)
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification  *)notifcation;
-- (void)applicationDidBecomeActive:(UIApplication *)application;
+
 - (id) getCommandInstance:(NSString*)className;
 
 @end
