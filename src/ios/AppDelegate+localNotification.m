@@ -1,11 +1,3 @@
-//
-//  AppDelegate+localNotification.m
-//
-//
-//  Created by Robert Easterday on 10/26/12.
-//  Modifed by Asi Farran on 23/9/13
-//
-
 #import "AppDelegate+localNotification.h"
 #import "LocalNotificationPlugin.h"
 #import <objc/runtime.h>
@@ -13,44 +5,74 @@
 
 @implementation AppDelegate (notification)
 
-static UILocalNotification *localNotification;
-static BOOL localNotificationColdStart;
 
-- (id) getCommandInstance:(NSString*)className
-{
-	return [self.viewController getCommandInstance:className];
-}
+// The goal is to have a drop-in module that does not require the user to
+// make any manual additions to the AppDelegate
 
--(id) init{
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActiveHandler:)
-                                                name:@"UIApplicationDidBecomeActiveNotification" object:nil];
-    
-    self = [super init];
-    return self;
-}
+// To do so we need to hook into the AppDelegate events and life cyle
+// and we do so by creating a category class implementing only the functionailty relevant to this plugin
+
+// The only way to allow SEVERAL plugins to use this method with colliding
+// is to register static and unique event handlers that then use [[UIApplication sharedApplication] delegate]
+// to gain access to the root controller and the actual plugin
+
+// All variables and method names are postfixed with the plugin name to try and ensure they are unique // to prevent collision with other plugin handlers
+
+static UILocalNotification *notificationPayload_localNotification;
+static BOOL isColdStart_localNotification;
 
 + (void)load
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkForLocalNotificationsOnStartup:)
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkForNotificationsOnStartup_localNotification:)
                                                  name:@"UIApplicationDidFinishLaunchingNotification" object:nil];
     
-    
+  
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActiveHandler_localNotification:)
+                                                 name:@"UIApplicationDidBecomeActiveNotification" object:nil];
+        
 }
 
-+ (void)checkForLocalNotificationsOnStartup:(NSNotification *)notification
++ (void)checkForNotificationsOnStartup_localNotification:(NSNotification *)notification
 {
     
-	if (notification)
-	{
-		NSDictionary *launchOptions = [notification userInfo];
+	NSDictionary *launchOptions = [notification userInfo];
         
-		if (launchOptions){
-			localNotification = [launchOptions objectForKey: @"UIApplicationLaunchOptionsLocalNotificationKey"];
-            if(localNotification){
-                localNotificationColdStart = YES;
-            }
+	if (launchOptions){
+            
+		notificationPayload_localNotification = [launchOptions objectForKey: @"UIApplicationLaunchOptionsLocalNotificationKey"];
+            
+        if(notificationPayload_localNotification){
+        	isColdStart_localNotification = YES;
         }
+	}
+	
+}
+
+
++ (void)applicationDidBecomeActiveHandler_localNotification:(NSNotification *)notification
+{
+    
+	
+	AppDelegate *delegate =  [[UIApplication sharedApplication] delegate];
+        
+	if (![delegate.viewController.webView isLoading] && notificationPayload_localNotification) {
+		
+		LocalNotificationPlugin *handler = [delegate getCommandInstance:@"LocalNotification"];
+            
+        handler.pendingNotification = notificationPayload_localNotification;
+        notificationPayload_localNotification = nil;
+            
+        // on cold start the cordova view will not be ready to handle the event yet
+        // so we don tinvoke it. It will call when its ready
+        if(isColdStart_localNotification){
+                
+        	isColdStart_localNotification = NO; //reset flag so new incoming notifications can be passed directly to the handler
+        }
+        else{
+        	handler performSelectorOnMainThread:@selector(notificationReceived) withObject:handler waitUntilDone:NO];        
+        }
+        
+        delegate = nil;
 	}
 }
 
@@ -72,37 +94,22 @@ static BOOL localNotificationColdStart;
     
     
     if (appState == UIApplicationStateActive) {
+        
         LocalNotificationPlugin *handler = [self getCommandInstance:@"LocalNotification"];
         handler.pendingNotification = notification;
         
         [handler notificationReceived];
+        
     } else {
         //save it for later
-        localNotification = notification;
-    }
-}
-
-- (void)applicationDidBecomeActiveHandler:(NSNotification *)notification {
-    
-    NSLog(@"local notification active");
-    
-    
-    
-    if (![self.viewController.webView isLoading] && localNotification) {
-        LocalNotificationPlugin *handler = [self getCommandInstance:@"LocalNotification"];
-        
-        handler.pendingNotification = localNotification;
-        localNotification = nil;
-        
-        if(localNotificationColdStart){
-            localNotificationColdStart = NO; //reset flag so new incoming notifications can be passed directly to the handler
-        }
-        else{
-            [handler performSelectorOnMainThread:@selector(notificationReceived) withObject:handler waitUntilDone:NO];
-        }
+        notificationPayload_localNotification = notification;
     }
 }
 
 
+- (id) getCommandInstance:(NSString*)className
+{
+	return [self.viewController getCommandInstance:className];
+}
 
 @end
