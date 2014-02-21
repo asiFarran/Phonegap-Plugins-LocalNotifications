@@ -14,8 +14,4 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application;
 - (id) getCommandInstance:(NSString*)className;
 
-
-@property (nonatomic, retain) UILocalNotification *launchNotification;
-@property BOOL notificationColdStart;
-
 @end
